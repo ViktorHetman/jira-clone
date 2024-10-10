@@ -43,7 +43,7 @@ export const SignUpCard: React.FC = () => {
 
   return (
     <Card className="w-full h-full md:w-[486px] border-none shadow-none">
-      <CardHeader className="flex items-center justify-center text-center p-7">
+      <CardHeader className="flex items-center justify-center text-center p-7 space-y-4">
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
           By signing up, you agree to our{" "}
@@ -138,6 +138,17 @@ export const SignUpCard: React.FC = () => {
           <FaGithub className="mr-2 size-6" />
           Login with GitHub
         </Button>
+      </CardContent>
+      <div className="px-7">
+        <DottedSeparator />
+      </div>
+      <CardContent className="p-7 flex items-center justify-center">
+        <p>
+          Already have an account?
+          <Link href={"/sign-in"}>
+            <span className="text-blue-700">&nbsp;Sign In</span>
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );
