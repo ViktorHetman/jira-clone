@@ -1,27 +1,16 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import { getCurrent } from "@/features/auth/actions";
+import { UserButton } from "@/features/auth/components/user-button";
 
-import { useCurrent } from "@/features/auth/hooks/use-current";
-import { Button } from "@/components/ui/button";
-import { useLogout } from "@/features/auth/hooks/use-logout";
+const Home: React.FC = async () => {
+  const user = await getCurrent();
 
-const Home: React.FC = () => {
-  const { data, isLoading } = useCurrent();
-  const router = useRouter();
-  const { mutate } = useLogout();
+  if (!user) redirect("/sign-in");
 
-  React.useEffect(() => {
-    if (!data && !isLoading) {
-      router.push("/sign-in");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
   return (
     <div>
-      ONLY FOR AUTH
-      <Button onClick={() => mutate()}>Logout</Button>
+      <UserButton />
     </div>
   );
 };

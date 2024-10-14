@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -27,7 +29,7 @@ import { registerSchema } from "../schemas";
 import { useRegister } from "../hooks/use-register";
 
 export const SignUpCard: React.FC = () => {
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -111,7 +113,7 @@ export const SignUpCard: React.FC = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={false} className="w-full" size="lg">
+            <Button disabled={isPending} className="w-full" size="lg">
               Register
             </Button>
           </form>
@@ -125,7 +127,7 @@ export const SignUpCard: React.FC = () => {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FcGoogle className="mr-2 size-6" />
           Login with Google
@@ -134,7 +136,7 @@ export const SignUpCard: React.FC = () => {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FaGithub className="mr-2 size-6" />
           Login with GitHub
