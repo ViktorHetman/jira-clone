@@ -23,22 +23,23 @@ import {
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 
+import { registerSchema } from "../schemas";
+import { useRegister } from "../hooks/use-register";
+
 export const SignUpCard: React.FC = () => {
-  const formSchema = z.object({
-    name: z.string().trim().min(1, "Required"),
-    email: z.string().email(),
-    password: z.string().min(8, "Minimum of 8 characters required"),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useRegister();
+
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+    mutate({ json: values });
   };
 
   return (
@@ -111,7 +112,7 @@ export const SignUpCard: React.FC = () => {
               )}
             />
             <Button disabled={false} className="w-full" size="lg">
-              Login
+              Register
             </Button>
           </form>
         </Form>

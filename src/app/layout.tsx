@@ -27,4 +27,5 @@ const RootLayout: React.FC<
     </html>
   );
 };
+
 export default RootLayout;
