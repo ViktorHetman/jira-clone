@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { Loader } from "lucide-react";
 
 import {
   Card,
@@ -114,7 +115,14 @@ export const SignUpCard: React.FC = () => {
               )}
             />
             <Button disabled={isPending} className="w-full" size="lg">
-              Register
+              {isPending ? (
+                <>
+                  <Loader className="size-4 animate-spin text-neutral-600" />
+                  <span className="text-neutral-600 ml-2">Processing...</span>
+                </>
+              ) : (
+                "Register"
+              )}
             </Button>
           </form>
         </Form>
