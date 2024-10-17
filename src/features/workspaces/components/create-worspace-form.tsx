@@ -1,9 +1,11 @@
 "use client";
 
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader } from "lucide-react";
+import Image from "next/image";
+import { ImageIcon, Loader } from "lucide-react";
 
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import {
@@ -17,6 +19,7 @@ import {
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { createWorkspaceSchema } from "../schemas";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
@@ -28,17 +31,39 @@ interface Props {
 export const CreateWorkspaceForm: React.FC<Props> = ({ onCancel }) => {
   const { mutate, isPending } = useCreateWorkspace();
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   const form = useForm<z.infer<typeof createWorkspaceSchema>>({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
       name: "",
+      image: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof createWorkspaceSchema>) => {
-    mutate({ json: values });
-    form.reset();
+    const finalValues = {
+      ...values,
+      image: values.image instanceof File ? values.image : "",
+    };
+
+    mutate(
+      { form: finalValues },
+      {
+        onSuccess: () => {
+          form.reset();
+        },
+      }
+    );
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue("image", file);
+    }
+  };
+
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
@@ -64,6 +89,60 @@ export const CreateWorkspaceForm: React.FC<Props> = ({ onCancel }) => {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <div className="flex flex-col gap-y-2">
+                    <div className="fles items-center gap-x-5">
+                      {field.value ? (
+                        <div className="size-[72px] relative overflow-hidden rounded-md">
+                          <Image
+                            src={
+                              field.value instanceof File
+                                ? URL.createObjectURL(field.value)
+                                : field.value
+                            }
+                            alt="workspace icon"
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className="size-[72px]">
+                          <AvatarFallback>
+                            <ImageIcon className="size-[36px] text-neutral-400" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      <div className="flex flex-col">
+                        <p className="text-sm">Workspace icon</p>
+                        <p className="text-sm text-muted-foreground">
+                          JPG, JPEG, SVG or PNG, max 1MB
+                        </p>
+                        <input
+                          className="hidden"
+                          accept=".jpg, .png, .jpeg, .svg"
+                          type="file"
+                          ref={inputRef}
+                          disabled={isPending}
+                          onChange={handleImageChange}
+                        />
+                        <Button
+                          type="button"
+                          disabled={isPending}
+                          variant="tertiary"
+                          size="xs"
+                          className="w-fit mt-2"
+                          onClick={() => inputRef.current?.click()}
+                        >
+                          Upload image
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               />
             </div>
