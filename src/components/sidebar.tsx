@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { DottedSeparator } from "./dotted-separator";
 import { Navigation } from "./navigation";
+import { WorkspaceSwitcher } from "./workspace-switcher";
 
 export const Sidebar: React.FC = () => {
   return (
@@ -10,6 +11,8 @@ export const Sidebar: React.FC = () => {
       <Link href="/">
         <Image src="/logo.svg" alt="logo" width={164} height={48}></Image>
       </Link>
+      <DottedSeparator className="my-4" />
+      <WorkspaceSwitcher />
       <DottedSeparator className="my-4" />
       <Navigation />
     </aside>
