@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { createWorkspaceSchema } from "../schemas";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
+import { cn } from "@/lib/utils";
 
 interface Props {
   onCancel?: () => void;
@@ -157,6 +158,7 @@ export const CreateWorkspaceForm: React.FC<Props> = ({ onCancel }) => {
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(!onCancel && "invisible")}
               >
                 Cancel
               </Button>
